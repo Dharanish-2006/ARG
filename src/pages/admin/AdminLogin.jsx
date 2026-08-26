@@ -81,15 +81,6 @@ export default function AdminLogin() {
                 {submitting ? "Signing in…" : "Sign in"}
               </Button>
             </form>
-
-            <p className="mt-6 border-t border-paper/10 pt-5 text-xs leading-relaxed text-paper/45">
-              First time signing in? Use the default admin account created when the server first
-              started — its credentials were printed once in the server console (or set via
-              <code className="mx-1 rounded bg-paper/10 px-1 py-0.5">DEFAULT_ADMIN_EMAIL</code>/
-              <code className="mx-1 rounded bg-paper/10 px-1 py-0.5">DEFAULT_ADMIN_PASSWORD</code>
-              in <code className="rounded bg-paper/10 px-1 py-0.5">.env</code>). You'll be asked to
-              set a new password immediately after.
-            </p>
           </div>
         </div>
       </div>
