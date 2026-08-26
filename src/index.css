@@ -1,0 +1,190 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --font-display: "Fraunces", "Georgia", serif;
+  --font-body: "Public Sans", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, monospace;
+  --font-admin: "Outfit", "Public Sans", sans-serif;
+
+  /* Fixed brand marks — used deliberately for permanently-dark bands
+     (hero, footer, CTA panels) regardless of light/dark site theme.
+     Deliberately neutral (not green) so the brand's emerald stays an accent
+     color rather than the dominant background tone. */
+  --color-ink: #12141c;
+  --color-ink-soft: #1b1e29;
+  --color-paper: #ffffff;
+  --color-emerald-950: #06321d;
+  --color-emerald-900: #0a6b3d;
+  --color-emerald-700: #0fae62;
+  --color-emerald-600: #17cf78;
+  --color-emerald-100: #d7fbe7;
+  --color-brass-600: #e08e0b;
+  --color-brass-500: #ffb020;
+  --color-brass-400: #ffca58;
+  --color-brass-200: #ffe9b8;
+
+  /* Semantic tokens — these flip under .dark and drive the default
+     (non-branded-dark) body of the site: page background, cards, text. */
+  --color-surface: #ffffff;
+  --color-surface-alt: #f2faf5;
+  --color-surface-raised: #ffffff;
+  --color-content: #0d1f17;
+  --color-content-muted: #56695f;
+  --color-edge: #e1ede4;
+
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  --shadow-card: 0 1px 2px rgba(13, 31, 23, 0.05), 0 20px 40px -18px rgba(13, 31, 23, 0.18);
+  --shadow-card-hover: 0 4px 10px rgba(13, 31, 23, 0.07), 0 30px 55px -20px rgba(13, 31, 23, 0.26);
+}
+
+.dark {
+  --color-surface: #071510;
+  --color-surface-alt: #0d2119;
+  --color-surface-raised: #122b21;
+  --color-content: #eafcf1;
+  --color-content-muted: #9fbdac;
+  --color-edge: #1d3b2d;
+
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.3), 0 20px 45px -18px rgba(0, 0, 0, 0.55);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.35), 0 30px 60px -20px rgba(0, 0, 0, 0.6);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--color-surface);
+    color: var(--color-content);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.4s var(--ease-out), color 0.4s var(--ease-out);
+  }
+
+  h1, h2, h3, h4 {
+    font-family: var(--font-display);
+    letter-spacing: -0.01em;
+  }
+
+  /* Dashboard/admin UI uses sans display type only — no serif, per house style. */
+  .font-admin h1, .font-admin h2, .font-admin h3, .font-admin h4, .font-admin legend {
+    font-family: var(--font-admin);
+    letter-spacing: -0.02em;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-brass-500);
+    outline-offset: 3px;
+  }
+
+  ::selection {
+    background-color: var(--color-brass-400);
+    color: var(--color-ink);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+@layer utilities {
+  .eyebrow {
+    font-family: var(--font-mono);
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-size: 0.72rem;
+  }
+
+  .container-wide {
+    max-width: 1360px;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+
+  @media (min-width: 768px) {
+    .container-wide {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Fixed, pointer-events-none film-grain overlay — applied once at the app
+     root only, per performance guidance (never on scrolling containers). */
+  .grain-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    pointer-events: none;
+    opacity: 0.035;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Double-bezel "machined" container: outer shell + inner core.
+     Usage: wrap content in .bezel-shell > .bezel-core */
+  .bezel-shell {
+    padding: 0.375rem;
+    border-radius: 1.75rem;
+    background-color: var(--color-surface-alt);
+    border: 1px solid var(--color-edge);
+  }
+  .bezel-core {
+    border-radius: 1.4rem;
+    overflow: hidden;
+    background-color: var(--color-surface-raised);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
+  }
+  .dark .bezel-core {
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
+  }
+
+  .corner-frame {
+    position: relative;
+  }
+  .corner-frame::before,
+  .corner-frame::after {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-color: var(--color-brass-400);
+    opacity: 0;
+    transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+    pointer-events: none;
+  }
+  .corner-frame::before {
+    top: 10px;
+    left: 10px;
+    border-top: 1.5px solid;
+    border-left: 1.5px solid;
+    transform: translate(4px, 4px);
+  }
+  .corner-frame::after {
+    bottom: 10px;
+    right: 10px;
+    border-bottom: 1.5px solid;
+    border-right: 1.5px solid;
+    transform: translate(-4px, -4px);
+  }
+  .corner-frame:hover::before,
+  .corner-frame:hover::after,
+  .corner-frame:focus-within::before,
+  .corner-frame:focus-within::after {
+    opacity: 1;
+    transform: translate(0, 0);
+  }
+}
